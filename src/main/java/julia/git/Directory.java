@@ -1,9 +1,5 @@
 package julia.git;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +8,9 @@ public class Directory implements Listable {
     private final HashMap<String, Listable> content = new HashMap<>();
 
     public void add(String name, Listable list) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("File name cannot be null or empty!");
+        }
         content.put(name, list);
     }
 
@@ -29,41 +28,23 @@ public class Directory implements Listable {
     }
 
     @Override
-    public String getContent() throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        StringBuilder builder = new StringBuilder();
-        for (String key : content.keySet()) {
-            Listable list = content.get(key);
-            String hash = list.getHash();
-            builder.append(hash).append("     ").append(key).append("\n");
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        return builder.toString(); // Get string containing keys + hashes
-    }
-
-    @Override
-    public String getHash() throws NoSuchAlgorithmException {
-        StringBuilder builder = new StringBuilder();
-        for (String key : content.keySet()) {
-            builder.append(key).append("\n");
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        String content = builder.toString(); // Get string containing keys only
-        byte[] sha = sha1(content);
-        StringBuilder result = new StringBuilder();
-        for (byte b : sha) {
-            int decimal = (int) b & 0xff;
-            String hex = Integer.toHexString(decimal);
-            if (hex.length() % 2 == 1) {
-                hex = "0" + hex;
+    public String getContent() {
+        if (content.isEmpty()) {
+//            throw new IllegalStateException("Directory is empty!");
+            return "Directory is empty!";
+        } else {
+            StringBuilder builder = new StringBuilder();
+            for (String key : content.keySet()) {
+                Listable list = content.get(key);
+                String hash = list.getHash();
+                if (list.isDirectory()) {
+                    builder.append("tree ").append(hash).append("    ").append(key).append("\n");
+                } else {
+                    builder.append("blob ").append(hash).append("    ").append(key).append("\n");
+                }
             }
-            result.append(hex);
+            builder.deleteCharAt(builder.length() - 1);
+            return builder.toString();
         }
-        return result.toString();
-    }
-
-    private static byte[] sha1(String content) throws NoSuchAlgorithmException {
-        byte[] data = content.getBytes(StandardCharsets.UTF_8);
-        MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-        return messageDigest.digest(data);
     }
 }
