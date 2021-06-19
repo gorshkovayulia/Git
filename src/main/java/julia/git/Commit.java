@@ -1,46 +1,42 @@
 package julia.git;
 
-import java.util.LinkedList;
-import java.util.List;
+public class Commit implements GitObject {
+    private final String tree; // SHA1 of tree object
+    private String parent; // SHA1 of previous commits or root commit if it's the first commit in the project
+    private final String message; // Comment describing the changes
+    private final String author; // The name of person responsible for changes
+    private final String date; // The date of creation commit
 
-public class Commit implements Listable {
-    LinkedList list = new LinkedList();
-    String tree; // SHA1 of tree object
-    String parent; // SHA1 of previous commits or root commit if it's the first commit in the project
-    String message; // Comment describing the changes
-    String author; // The name of person responsible for changes
-    String committer; // The name of person who created the commit
-    String date;
-
-    Commit(String message, String author, String committer, String date) {
+    Commit(String tree, String parent, String message, String author, String date) {
+        this.tree = tree;
+        this.parent = parent;
         this.message = message;
         this.author = author;
-        this.committer = committer;
+        this.date = date;
+    }
+
+    Commit(String tree, String message, String author, String date) {
+        this.tree = tree;
+        this.message = message;
+        this.author = author;
         this.date = date;
     }
 
     @Override
-    public List<String> list() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isDirectory() {
-        return false;
-    }
-
-    @Override
-    public Listable get(String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public String getContent() {
-        return null;
-    }
-
-    @Override
-    public String getHash() {
-        return Listable.super.getHash();
+        StringBuilder builder = new StringBuilder();
+        if (parent == null) {
+            builder.append("tree ").append(tree).append("\n").
+                    append("Author:").append(author).append("\n").
+                    append("Date:").append(date).append("\n").
+                    append("\n").append("     ").append(message);
+        } else {
+            builder.append("tree ").append(tree).append("\n").
+                    append("parent ").append(parent).append("\n").
+                    append("Author:").append(author).append("\n").
+                    append("Date:").append(date).append("\n").
+                    append("\n").append("     ").append(message);
+        }
+        return builder.toString();
     }
 }
