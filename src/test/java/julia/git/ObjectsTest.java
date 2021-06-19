@@ -27,6 +27,16 @@ public class ObjectsTest {
     }
 
     @Test
+    public void possibleToAddCommitIntoObjects() {
+        byte[] b = new byte[] {116, 101, 115, 116};
+        File file = new File(b);
+        Commit commit = new Commit(file.getHash(), "Test", "gorshkova_julia", "Tue Apr 27 22:32:35 2021 +0300");
+        Objects objects = new Objects();
+        objects.add(commit);
+        assertEquals(commit, objects.get("9471e2f1f8a457d490cc31e361bab736ad530a01"));
+    }
+
+    @Test
     public void impossibleToGetNotExistingObject() {
         byte[] b = new byte[] {116, 101, 115, 116};
         File file = new File(b);
