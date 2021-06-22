@@ -5,7 +5,7 @@ public class Commit implements GitObject {
     private String parent; // SHA1 of previous commits or root commit if it's the first commit in the project
     private final String message; // Comment describing the changes
     private final String author; // The name of person responsible for changes
-    private final String date; // The date of creation commit
+    private final String date; // The date of commit creation
 
     Commit(String tree, String parent, String message, String author, String date) {
         this.tree = tree;
@@ -20,6 +20,22 @@ public class Commit implements GitObject {
         this.message = message;
         this.author = author;
         this.date = date;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
+
+    public void setMessage(String parent) {
+        this.parent = parent;
+    }
+
+    public void setAuthor(String parent) {
+        this.parent = parent;
+    }
+
+    public void setDate(String parent) {
+        this.parent = parent;
     }
 
     @Override
