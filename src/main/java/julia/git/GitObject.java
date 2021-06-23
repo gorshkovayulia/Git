@@ -1,16 +1,12 @@
 package julia.git;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public interface GitObject {
     String getContent();
 
     default String getHash() {
         String content = getContent();
         StringBuilder result = new StringBuilder();
-        byte[] sha = sha1(content);
+        byte[] sha = Sha1.getSha1(content);
         for (byte b : sha) {
             int decimal = (int) b & 0xff;
             String hex = Integer.toHexString(decimal);
@@ -20,15 +16,5 @@ public interface GitObject {
             result.append(hex);
         }
         return result.toString();
-    }
-
-    default byte[] sha1(String content) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-            byte[] data = content.getBytes(StandardCharsets.UTF_8);
-            return messageDigest.digest(data);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException();
-        }
     }
 }

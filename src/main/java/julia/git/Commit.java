@@ -22,36 +22,15 @@ public class Commit implements GitObject {
         this.date = date;
     }
 
-    public void setParent(String parent) {
-        this.parent = parent;
-    }
-
-    public void setMessage(String parent) {
-        this.parent = parent;
-    }
-
-    public void setAuthor(String parent) {
-        this.parent = parent;
-    }
-
-    public void setDate(String parent) {
-        this.parent = parent;
-    }
-
     @Override
     public String getContent() {
         StringBuilder builder = new StringBuilder();
-        if (parent == null) {
-            builder.append("tree ").append(tree).append("\n").
-                    append("Author:").append(author).append("\n").
-                    append("Date:").append(date).append("\n").
-                    append("\n").append("     ").append(message);
-        } else {
-            builder.append("tree ").append(tree).append("\n").
-                    append("parent ").append(parent).append("\n").
-                    append("Author:").append(author).append("\n").
-                    append("Date:").append(date).append("\n").
-                    append("\n").append("     ").append(message);
+        builder.append("tree ").append(tree).append("\n").
+                append("Author:").append(author).append("\n").
+                append("Date:").append(date).append("\n").
+                append("\n").append("     ").append(message);
+        if (parent != null) {
+            builder.insert(46, "parent " + parent + "\n");
         }
         return builder.toString();
     }
