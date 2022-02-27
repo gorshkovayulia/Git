@@ -19,14 +19,6 @@ public class DirectoryTest {
     }
 
     @Test
-    public void possibleToAddEmptyDirectoryIntoDirectory() {
-        Directory directory = new Directory();
-        Directory directory2 = new Directory();
-        directory.add("Directory2", directory2);
-        assertEquals("tree b704939b0ddbb06bb28d7ee61ee2859bd9963644    Directory2", directory.getContent());
-    }
-
-    @Test
     public void possibleToAddNotEmptyDirectoryIntoDirectory() {
         byte[] b = new byte[] {116, 101, 115, 116};
         File file = new File(b);
@@ -43,10 +35,11 @@ public class DirectoryTest {
         File file = new File(b);
         Directory directory = new Directory();
         Directory directory2 = new Directory();
+        directory2.add("Tester", file);
         directory.add("Tester", file);
         directory.add("Directory", directory2);
         assertEquals("blob a94a8fe5ccb19ba61c4c0873d391e987982fbbd3    Tester" + "\n" +
-                "tree b704939b0ddbb06bb28d7ee61ee2859bd9963644    Directory", directory.getContent());
+                "tree d6e6647059d41c471ebe5ede49872da381fbf93e    Directory", directory.getContent());
     }
 
     @Test
@@ -122,13 +115,8 @@ public class DirectoryTest {
     @Test
     public void impossibleToGetContentIfDirectoryIsEmpty() {
         Directory directory = new Directory();
-        assertEquals("Directory is empty!", directory.getContent());
-    }
-
-    @Test
-    public void possibleToGetHashForEmptyDirectory() {
-        Directory directory = new Directory();
-        assertEquals("b704939b0ddbb06bb28d7ee61ee2859bd9963644", directory.getHash());
+        Exception e = assertThrows(IllegalStateException.class, directory::getContent);
+        assertEquals("Directory is empty!", e.getMessage());
     }
 
     @Test

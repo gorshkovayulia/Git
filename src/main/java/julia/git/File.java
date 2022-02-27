@@ -3,7 +3,7 @@ package julia.git;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class File implements Listable {
+public class File implements Listable, GitObject {
     private final byte[] b;
 
     File(byte[] b) {
